@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %} {% block title %}World Population Visualization{% endblock %} {% block styles %} {{super()}}
-<link href="{{url_for('static', filename='scrolling-nav.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='style.css')}}" rel="stylesheet">
 <script src="{{url_for('static', filename='jquery.js')}}"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="{{url_for('static', filename='bootstrap.min.js')}}"></script>
@@ -36,19 +36,23 @@
 
     <!-- Intro Section -->
 
-    <div class="container" id="">
+    <div class="container">
 
 
 
         <div class="row">
-            <div class="col-md-5">
-                <h1>Population Data:</h1>
+            <div class="col-md-6 " id="forms">
+                <h3>Population Data:</h3>
+                {{ wtf.quick_form(form)}}
+            </div>
+            <div class="col-md-5" id="forms">
+                <h3>Individual Countires</h3>
                 {{ wtf.quick_form(form)}}
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 well well-lg">
                 <ul>
                     {% if pop_data %} {% for pop in pop_data %}
                     <li> {{pop}}</li>

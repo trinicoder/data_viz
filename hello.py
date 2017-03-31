@@ -27,6 +27,7 @@ def index():
         values= (year,age,)
         data= getRequest(year,age)
         session['data'] = data
+        session['age'] = age
         
         #session['test']= [0,1,2]
         #form.year.data = ''
