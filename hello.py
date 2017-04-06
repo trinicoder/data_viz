@@ -11,8 +11,9 @@ from wtforms import StringField, IntegerField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Required
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']=\
-        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+#app.config['SQLALCHEMY_DATABASE_URI']=\
+ #       'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI']= "postgresql://varoon:varoon@localhost:5432/population"
 app.config['SQLALCHMEY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -22,23 +23,47 @@ manager = Manager(app)
 bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = 'secretkey'
 
-class Role(db.Model):
-    __tablename__ = 'roles'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    users = db.relationship('User', backref='role')
+# class Role(db.Model):
+#     __tablename__ = 'roles'
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(64), unique=True)
+#     users = db.relationship('User', backref='role')
+
+#     def __repr__ (self):
+#         return '<Role %r>' % self.name
+
+# class User(db.Model):
+#     __tablename__ = 'users'
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String(64), unique=True, index=True)
+#     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+#     def __repr__(self):
+#         return '<User %r>' % self.name
+
+class Country(db.Model):
+    __tablename__ = 'country'
+    countryid = db.Column(db.Integer, primary_key=True)
+    countryname = db.Column(db.String(64), unique=True)
+
 
     def __repr__ (self):
-        return '<Role %r>' % self.name
+        return '<Country %r>' % self.countryname
 
-class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+class populationdata(db.Model):
+    __tablename__ = 'populationdata'
+    populationid = db.Column(db.Integer, primary_key=True)
+    countryid = db.Column(db.Integer, index=True)
+    age = db.Column(db.Integer)
+    male = db.Column(db.Integer)
+    female = db.Column(db.Integer)
+    year = db.Column(db.Integer)
 
     def __repr__(self):
-        return '<User %r>' % self.name
+        return '<populationdata %r>' % self.countryid
+
+
+
 
 class populationRequest(Form):
     year = IntegerField('Enter Year (1950 and 2100)', validators=[Required()])
