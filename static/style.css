@@ -4,3 +4,9 @@
     border-radius: 5px;
     margin: 10px;
 }
+#analytics {
+      background-color: #3046e5;
+      background-image: url("sas.png");
+      background-repeat: no-repeat;
+      background-position-y: center;
+}

@@ -17,14 +17,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-                <a class="navbar-brand" href="/">World Population</a>
+                <a class="navbar-brand" href="/">Population Analytics</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active" id="home"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-                    <li id="dataform"><a href="{{ url_for('data') }}">dataform</a></li>
+                    <li id="dataform"><a href="{{ url_for('query') }}">Query</a></li>
 
                 </ul>
 
@@ -38,27 +38,19 @@
 
     <div class="container">
 
-
-
         <div class="row">
-            <div class="jumbotron">
-                <h1>Hello, world!</h1>
-                <p>...</p>
+            <div class="jumbotron" id=analytics>
+                <h1>Population Analytics</h1>
+                <p><b>Analytics</b> is the discovery, interpretation, and communication of meaningful patterns in data. Especially 
+                    valuable in areas rich with recorded information, analytics relies on the simultaneous application of statistics, 
+                    computer programming and operations research to quantify performance.</p>
                 <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
             </div>
-        </div>
-        <div class="row">
-            {{ wtf.quick_form(form) }}
+
         </div>
 
         <div class="row">
-            <div class="col-md-12 well well-lg">
-                <ul>
-                    {% if pop_data %} {% for key in pop_data %}
-                    <li> {{key.birth_year}}- {{value}}</li>
-                    {% endfor %} {% endif %}
-                </ul>
-            </div>
+
         </div>
 
     </div>

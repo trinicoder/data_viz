@@ -2,9 +2,9 @@
 import os
 from flask import Flask, render_template, url_for, redirect, session, request
 from flask_bootstrap import Bootstrap
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 import requests
-from flask.ext.script import Manager
+from flask_script import Manager
 from flask_wtf import Form
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, SelectField
@@ -73,15 +73,7 @@ class populationRequest(Form):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    session['data'] = ['foobar']
-    form = populationRequest()
-    if form.validate_on_submit():
-        year = form.year.data
-        age = form.age.data
-        getRequest(year, age)
-        session['data'] = [year, age]
-        return redirect(url_for('index'))
-    return render_template('index.html', form=form, pop_data=session.get('pop_io'))
+    return render_template('home.html')
 
 
 @app.route('/data')
@@ -91,6 +83,20 @@ def data():
     return render_template('index2.html',  pop_data=session.get('pop_io'))
 
 
+@app.route('/query', methods=['GET', 'POST'])
+def query():
+    # session['data'] = ['foobar']
+    form = populationRequest()
+    if form.validate_on_submit():
+        year = form.year.data
+        age = form.age.data
+        getRequest(year, age)
+        session['data'] = [year, age]
+        return redirect(url_for('index'))
+    # return render_template('query.html', form=form, pop_data=session.get('pop_io'))
+    result=Country.query.all()
+    return render_template('query.html', form=form,query=result)
+    
 def getRequest(year, age):
         print (year,age)
         #r = requests.get('http://api.population.io:80/1.0/population/'+ str(year)+ '/aged/'+ str(age)+ '/')
