@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-manager = Manager(app)
+#manager = Manager(app)
 bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = 'secretkey'
 
@@ -78,13 +78,6 @@ def index():
     return render_template('home.html')
 
 
-@app.route('/data')
-def data():
-    print(session.get('data'))
-    print(session.get('pop_io'))
-    return render_template('index2.html', pop_data=session.get('pop_io'))
-
-
 @app.route('/query', methods=['GET', 'POST'])
 def query():
     # session['data'] = ['foobar']
@@ -97,21 +90,67 @@ def query():
         gender = form.gender.data
 
         c= Country.query.filter_by(countryname= country).first()
-        c2= populationdata.query.filter_by(countryid=c.countryid,age=age,year=year).first()
+        #c2= populationdata.query.filter_by(countryid=c.countryid,age=age,year=year).all()
+        c2= populationdata.query.filter_by(countryid=c.countryid,age=age).all()
+        collection= []
+        for e in c2:
+            data= [e.populationid, e.countryid, e.age, e.male, e.female, e.year]
+            data2= [{'year':year,'age':age,'country':country,'gender':gender,'male':e.male,'female':e.female}]
+            #data2= {'year':year,'age':age,'country':country,'male':e.male,'female':e.female}
+            collection.append(data2)
         session['country'] = country
        
-        session['query']= c2
+        session['query']= data2
         #session['query'] = [(e.populationid,e.countryid,e.age,e.male,e.female,e.year)
-        print(c2)
+        #print(c2)
      
         return redirect(url_for('query'))
     # return render_template('query.html', form=form, pop_data=session.get('pop_io'))
    # result = Country.query.all()
-    return render_template('query.html', form=form, country=session.get('country'))
+    return render_template('query.html', form=form, country=session.get('country'), query=session.get('query'))
+
+@app.route('/table', methods=['GET', 'POST'])
+def table():
+    # session['data'] = ['foobar']
+    #session['test'] = 'laddy'
+    form = populationRequest()
+    if form.validate_on_submit():
+        year = form.year.data
+        age = form.age.data
+        country = form.country.data
+        gender = form.gender.data
+
+        c= Country.query.filter_by(countryname= country).first()
+        #c2= populationdata.query.filter_by(countryid=c.countryid,age=age,year=year).all()
+        c2= populationdata.query.filter_by(countryid=c.countryid,age=age).all()
+        collection= []
+        for e in c2:
+            data= [e.populationid, e.countryid, e.age, e.male, e.female, e.year]
+            #data2= [{'year':year,'age':age,'country':country,'gender':gender,'male':e.male,'female':e.female}]
+            data2= {'year': e.year,'age':age,'country':country,'male':e.male,'female':e.female}
+            collection.append(data2)
+        session['country'] = country
+       
+        session['query']= collection
+        #session['query'] = [(e.populationid,e.countryid,e.age,e.male,e.female,e.year)
+        #print(c2)
+     
+        return redirect(url_for('table'))
+    # return render_template('query.html', form=form, pop_data=session.get('pop_io'))
+   # result = Country.query.all()
+    return render_template('tables.html', form=form, country=session.get('country'), query=session.get('query'))
 
 
+@app.route('/form', methods=['GET', 'POST'])
+def form():
+    return render_template('forms.html')
 
+    
+@app.route('/graph')
+def graph():
+    return render_template('graph.html')
 if __name__ == '__main__':
-    db.create_all()
-    manager.run()
+    db.create_all
+     
+    app.run(host='127.0.0.1', port=5000, debug=True)
 
