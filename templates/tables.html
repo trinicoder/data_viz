@@ -1,6 +1,7 @@
 {% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %} {% block title %}World Population Visualization{% endblock %} {% block styles %} {{super()}}
 <link href="{{url_for('static', filename='style.css')}}" rel="stylesheet">
 <script src="{{url_for('static', filename='jquery.js')}}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="{{url_for('static', filename='bootstrap.min.js')}}"></script>
 

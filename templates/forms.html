@@ -1,16 +1,35 @@
 {% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %} {% block title %}World Population Visualization{% endblock %} {% block styles %} {{super()}}
-<link href="{{url_for('static', filename='style.css')}}" rel="stylesheet">
-<link href="{{url_for('static', filename='form.css')}}" rel="stylesheet">
-<script src="{{url_for('static', filename='jquery.js')}}"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="{{url_for('static', filename='bootstrap.min.js')}}"></script>
-<script src="{{url_for('static', filename='form.js')}}"></script>
 
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+  #custom-handle {
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    var handle = $( "#custom-handle" );
+    $( "#slider" ).slider({
+      create: function() {
+        handle.text( $( this ).slider( "value" ) );
+      },
+      slide: function( event, ui ) {
+        handle.text( ui.value );
+      }
+    });
+  } );
+  </script>
 
 <body>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-default">
+     <nav class="navbar navbar-default">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -39,44 +58,14 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
-
-    <!-- Intro Section -->
-
-    <div class="container">
-    <div class="price-box">
-        <form class="form-horizontal form-pricing" role="form">
-            <div class="price-slider">
-                <h4 class="great">Amount</h4>
-
-                <div class="col-sm-12">
-                    <div id="slider"></div>
-                </div>
-            </div>
-            <div class="price-form">
-                <div class="form-group">
-                    <label for="amount" class="col-sm-6 control-label">Amount ($): </label>
-                    <span class="help-text">Please choose your amount</span>
-
-                    <div class="col-sm-6">
-                        <input type="hidden" id="amount" class="form-control">
-
-                        <p class="price lead" id="amount-label"></p>
-                        <span class="price">.00</span>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-
-
-    </div>
-
-
-
-
-
+<div id="slider">
+  <div id="custom-handle" class="ui-slider-handle"></div>
+</div>
+ 
+ 
 </body>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+</html>
+
+
+<
 {% endblock %}
