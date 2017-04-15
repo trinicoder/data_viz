@@ -77,7 +77,7 @@
 
 
             </div>
-            <div id="tabs-2"></div>
+            <div id="tabs-2"> {{ wtf.quick_form(form2) }}</div>
             <div id="tabs-3"> </div>
           </div> 
 
@@ -86,7 +86,7 @@
             <label for="amount">Years Range</label>
             <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
             {{country}}
-            {{query}}
+            {{query1}}
             </p>
             
             <div id="slider-range"></div>
@@ -124,7 +124,7 @@ $( function() {
     var container = document.getElementById('visualization');
 
   var items = [
-       {% if query %} {% for e in query %}
+       {% if query1 %} {% for e in query1 %}
        {x: '{{e.year}}', y: {{e.gender}}, group: {{e.group}}},
      {% endfor %}
     {% endif %}
@@ -138,6 +138,13 @@ $( function() {
  var groups = new vis.DataSet();
 groups.add({
     id: 1,
+    content: '{{country}}',
+    // Optional: a field 'visible'
+    // Optional: a field 'className'
+    // Optional: options
+  })
+  groups.add({
+    id: 2,
     content: '{{country}}',
     // Optional: a field 'visible'
     // Optional: a field 'className'

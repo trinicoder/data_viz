@@ -170,6 +170,9 @@ def table():
 @app.route('/form', methods=['GET', 'POST'])
 def form():
     form1= countryRequest()
+    form2 = compareCountries()
+    form3= agregateCountries()
+   
 
    
     if form1.validate_on_submit():
@@ -201,10 +204,46 @@ def form():
         print  (session['collection'])
         return redirect(url_for('form'))
     
+    #Comparison form     
+    if form2.validate_on_submit():
+        country1 = form2.country1.data
+        country2 = form2.country2.data
+        age = form2.age.data        
+        gender = form2.gender.data
+        r_country1 =Country.query.filter_by(countryname= country1).first()
+        r_country2 =Country.query.filter_by(countryname= country2).first()
+
+        r2_country1= populationdata.query.filter_by(countryid= r_country1.countryid,age=age).all()
+        collection1 = []
+        for e in r2_country1:
+            if (gender=='Male'):
+                    tuple = {'year': e.year,'age':age,'country':country1, 'gender':e.male, 'group': 1}
+            elif (gender=='Female'):
+                tuple = {'year': e.year,'age':age,'country':country1, 'gender':e.female, 'group': 1}
+            #append result to collection
+            collection1.append(tuple)
+
+        r2_country2= populationdata.query.filter_by(countryid= r_country2.countryid,age=age).all()
+        collection2 = []
+        for e in r2_country2:
+            if (gender=='Male'):
+                    tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.male, 'group': 2}
+            elif (gender=='Female'):
+                tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.female, 'group': 2}
+            
+            collection2.append(tuple)
+        session['country'] = country1+ ' '+country2 + ' '+age+ ' '+ gender
+       
     
-    #print  (session['collection'])
+        #print (collection1,collection2)
+        collection =collection1+collection2
+    
+        session['collection2'] = collection
+        print  (session['collection2'])
+        return redirect(url_for('form'))
+   
         
-    return render_template('form.html', form1=form1, country=session.get('country'), query=session.get('collection'))
+    return render_template('form.html', form1=form1,form2=form2, country=session.get('country'), query1=session.get('collection'),query2=session.get('collection2'))
 
     
 @app.route('/graph')
