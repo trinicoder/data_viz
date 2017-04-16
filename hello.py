@@ -174,8 +174,9 @@ def form():
     form3= agregateCountries()
    
 
-   
+    form1.country.data=''
     if form1.validate_on_submit():
+        session.pop('collection2', None)
         country = form1.country.data
         age = form1.age.data
         gender = form1.gender.data
@@ -196,16 +197,19 @@ def form():
                 tuple = {'year': e.year,'age':age,'country':country, 'gender':e.female,'group': 1}
             #append result to collection
             collection.append(tuple)
-        
-        session['country'] = country + ' '+age+ ' '+gender
+        session.pop('country', None)
+        session['country'] ={'country1':country,'age':age, 'gender':gender}
         #session['collection'] = collection
         #print(collection)
+        session.pop('double', None)
+        session['single']=1
         session['collection']=collection
         print  (session['collection'])
         return redirect(url_for('form'))
     
     #Comparison form     
     if form2.validate_on_submit():
+        session.pop('collection', None)
         country1 = form2.country1.data
         country2 = form2.country2.data
         age = form2.age.data        
@@ -232,18 +236,21 @@ def form():
                 tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.female, 'group': 2}
             
             collection2.append(tuple)
-        session['country'] = country1+ ' '+country2 + ' '+age+ ' '+ gender
+        session.pop('country', None)    
+        session['country'] = {'country1':country1,'country2':country2 ,'age':age, 'gender':gender}
        
     
         #print (collection1,collection2)
         collection =collection1+collection2
-    
+        session.pop('single', None)
+        session['double']=1
         session['collection2'] = collection
         print  (session['collection2'])
-        return redirect(url_for('form'))
+        #return redirect(url_for('form'))
    
         
-    return render_template('form.html', form1=form1,form2=form2, country=session.get('country'), query1=session.get('collection'),query2=session.get('collection2'))
+    return render_template('form.html', single=session.get('single'),double=session.get('double'),
+    form1=form1,form2=form2,form3=form3, country=session.get('country'), query1=session.get('collection'),query2=session.get('collection2'))
 
     
 @app.route('/graph')

@@ -78,7 +78,7 @@
 
             </div>
             <div id="tabs-2"> {{ wtf.quick_form(form2) }}</div>
-            <div id="tabs-3"> </div>
+            <div id="tabs-3">{{ wtf.quick_form(form3) }} </div>
           </div> 
 
           <h2 class="demoHeaders">Slider</h2>
@@ -86,7 +86,7 @@
             <label for="amount">Years Range</label>
             <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
             {{country}}
-            {{query1}}
+            
             </p>
             
             <div id="slider-range"></div>
@@ -101,7 +101,14 @@
 <!--<script src="external/jquery/jquery.js"></script>
 <script src="jquery-ui.js"></script>-->
 <script>
-$( "#tabs" ).tabs();
+$( "#tabs" ).tabs({active: {% if single %} 
+        0
+    {% elif double %} 
+        1
+    {% endif %}
+});
+
+
 // $( "#slider" ).slider({
 // 	range: true,
 // 	values: [ 17, 67 ]
@@ -124,10 +131,15 @@ $( function() {
     var container = document.getElementById('visualization');
 
   var items = [
-       {% if query1 %} {% for e in query1 %}
-       {x: '{{e.year}}', y: {{e.gender}}, group: {{e.group}}},
-     {% endfor %}
-    {% endif %}
+       {% if single %} 
+            {% for e in query1 %}
+                {x: '{{e.year}}', y: {{e.gender}}, group: {{e.group}}},
+            {% endfor %}
+        {% elif double %} 
+            {% for e in query2 %}
+                {x: '{{e.year}}', y: {{e.gender}}, group: {{e.group}}},
+            {% endfor %}
+        {% endif %}
   ];
 
   var dataset = new vis.DataSet(items);
@@ -138,18 +150,20 @@ $( function() {
  var groups = new vis.DataSet();
 groups.add({
     id: 1,
-    content: '{{country}}',
+    content: '{{country.country1}} - {{country.age}} {{country.gender}}',
     // Optional: a field 'visible'
     // Optional: a field 'className'
     // Optional: options
   })
+  {% if double %} 
   groups.add({
     id: 2,
-    content: '{{country}}',
+    content: '{{country.country2}} - {{country.age}} {{country.gender}}',
     // Optional: a field 'visible'
     // Optional: a field 'className'
     // Optional: options
   })
+   {% endif %}
 
 
      var options = {
