@@ -87,6 +87,7 @@
             <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
             {{country}}
             
+            
             </p>
             
             <div id="slider-range"></div>
@@ -101,12 +102,15 @@
 <!--<script src="external/jquery/jquery.js"></script>
 <script src="jquery-ui.js"></script>-->
 <script>
-$( "#tabs" ).tabs({active: {% if single %} 
-        0
-    {% elif double %} 
-        1
-    {% endif %}
-});
+$( "#tabs" ).tabs({active:{% if single%}0
+                        {% elif double %}
+                        1
+                        {% else %}
+                        0
+                        {% endif %}
+                        }
+
+);
 
 
 // $( "#slider" ).slider({

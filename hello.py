@@ -174,7 +174,6 @@ def form():
     form3= agregateCountries()
    
 
-    form1.country.data=''
     if form1.validate_on_submit():
         session.pop('collection2', None)
         country = form1.country.data
@@ -204,6 +203,7 @@ def form():
         session.pop('double', None)
         session['single']=1
         session['collection']=collection
+
         print  (session['collection'])
         return redirect(url_for('form'))
     
