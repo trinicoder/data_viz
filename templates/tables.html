@@ -1,12 +1,31 @@
-{% extends "bootstrap/base.html" %} {% import "bootstrap/wtf.html" as wtf %} {% block title %}World Population Visualization{% endblock %} {% block styles %} {{super()}}
-<link href="{{url_for('static', filename='style.css')}}" rel="stylesheet">
-<script src="{{url_for('static', filename='jquery.js')}}"></script>
+{% import "bootstrap/wtf.html" as wtf %}
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>Form</title>
+    <!-- Latest compiled and minified CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="{{url_for('static', filename='bootstrap.min.js')}}"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link href="{{url_for('static', filename='style.css')}}" rel="stylesheet">
+
+        <!-- Bootstrap Core JavaScript -->
+    <script src="{{url_for('static', filename='vis.min.js')}}"></script>
+    <link href="{{url_for('static', filename='vis.min.css')}}" rel="stylesheet">
+    <script src="{{url_for('static', filename='jquery-ui.js')}}"></script>
+    <link href="{{url_for('static', filename='jquery-ui.css')}}" rel="stylesheet">
+
+    </style>
+</head>
 <body>
 
+    <!-- Navigation -->
     <!-- Navigation -->
     <nav class="navbar navbar-default">
         <div class="container">
@@ -24,11 +43,18 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li id="home"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-                    <li id="dataform"><a href="{{ url_for('query') }}">Query</a></li>
-                    <li class="active" id="dataform"><a href="{{ url_for('table') }}">Table</a></li>
-                    <li id="dataform"><a href="{{ url_for('form') }}">Form</a></li>
-                    <li id="dataform"><a href="{{ url_for('graph') }}">Graph2d</a></li>
+                
+                <li class="active"><a href="{{ url_for('table') }}">Data Table</a></li>
+                <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Graph <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('country') }}">Single Country</a></li>
+                                <li><a href="{{ url_for('compareCountry') }}">Compare Countries</a></li>
+                                <li><a href="{{ url_for('agregateCountry') }}">Compare Countires Totals</a></li>
+
+                                </ul>
+                            </li> 
+                    
 
 
                 </ul>
@@ -42,13 +68,28 @@
     <!-- Intro Section -->
 
     <div class="container">
-
         <div class="row">
+           <div class="page-header">
+  <h1>Raw Data <small>Per Country Data</small></h1>
+</div>
+                <h1></h1>
+   
+            </div>
+        <div class="row">
+            <div class="panel panel-primary">
+             <div class="panel-heading">Fill Form</div>
+                <div class="panel-body">
             {{ wtf.quick_form(form) }}
+             </div>
+        </div>
         </div>
 
         <div class="row">
-            <div class="col-md-12 well well-lg">
+
+            <div class="panel panel-info">
+                 <div class="panel-heading">Table of  {{country}}'s Population Data</div>
+            <div class="panel-body">
+               <div class="col-md-12 well well-lg">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -73,14 +114,15 @@
                                 {% endif %}
                                     </tbody>
                                 </table>
-            </div>
+                    </div>
+         </div>
+        <div class="panel-footer">Panel footer</div>
+        </div>
+
         </div>
 
     </div>
 
 
-
-
-
 </body>
-{% endblock %}
+</html>

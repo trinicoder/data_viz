@@ -72,7 +72,12 @@ class populationRequest(Form):
     country = SelectField('Select a country', choices=[('Guyana', 'Guyana'), 
                             ('Jamaica', 'Jamaica'), ('Trinidad and Tobago', 'Trinidad and Tobago')])
     submit = SubmitField('Submit')
+class perCountry(Form):
+     country = SelectField('Select a country', choices=[('Guyana', 'Guyana'), 
+                            ('Jamaica', 'Jamaica'), ('Trinidad and Tobago', 'Trinidad and Tobago')])                            
+     age = SelectField('Select age (18,25,30)',   choices=[('18', 18), ('25', 25), ('30', 30)])
 
+     submit = SubmitField('Submit')      
 class countryRequest(Form):
      country = SelectField('Select a country', choices=[('Guyana', 'Guyana'), 
                             ('Jamaica', 'Jamaica'), ('Trinidad and Tobago', 'Trinidad and Tobago')])                            
@@ -142,32 +147,34 @@ def query():
 
 @app.route('/table', methods=['GET', 'POST'])
 def table():
-    # session['data'] = ['foobar']
-    #session['test'] = 'laddy'
-    form = populationRequest()
+    form = perCountry()
     if form.validate_on_submit():
-        year = form.year.data
+ 
         age = form.age.data
         country = form.country.data
-        gender = form.gender.data
 
-        c =Country.query.filter_by(countryname= country).first()
+
+        c= Country.query.filter_by(countryname= country).first()
         #c2= populationdata.query.filter_by(countryid=c.countryid,age=age,year=year).all()
-        c2 =populationdata.query.filter_by(countryid=c.countryid,age=age).all()
-        collection = []
+        c2= populationdata.query.filter_by(countryid=c.countryid,age=age).all()
+        collection= []
         for e in c2:
-            data = [e.populationid, e.countryid, e.age, e.male, e.female, e.year]
-            #data2= [{'year':year,'age':age,'country':country,'gender':gender,'male':e.male,'female':e.female}]
-            data2 = {'year': e.year,'age':age,'country':country,'male':e.male,'female':e.female}
+            data= [e.populationid, e.countryid, e.age, e.male, e.female, e.year]
+            data2= {'year':e.year,'age':age,'country':country,'male':e.male,'female':e.female}
+            #data2= {'year':year,'age':age,'country':country,'male':e.male,'female':e.female}
             collection.append(data2)
         session['country'] = country
-        session['query'] = collection
+        
+        session['query']= collection
         #session['query'] = [(e.populationid,e.countryid,e.age,e.male,e.female,e.year)
-        #print(c2)
+        print(collection)
+        print (country)
+     
         return redirect(url_for('table'))
     # return render_template('query.html', form=form, pop_data=session.get('pop_io'))
    # result = Country.query.all()
     return render_template('tables.html', form=form, country=session.get('country'), query=session.get('query'))
+
 
 
 @app.route('/form', methods=['GET', 'POST'])
@@ -179,6 +186,7 @@ def form():
 
     if form1.validate_on_submit():
         session.pop('collection2', None)
+        session.pop('collection3', None)
         country = form1.country.data
         age = form1.age.data
         gender = form1.gender.data
@@ -203,7 +211,7 @@ def form():
         session['country'] ={'country1':country,'age':age, 'gender':gender}
         #session['collection'] = collection
         #print(collection)
-        session.pop('double', None)
+
         session['single']=1
         session['collection']=collection
 
@@ -213,6 +221,8 @@ def form():
     #Comparison form     
     if form2.validate_on_submit():
         session.pop('collection', None)
+ 
+        session.pop('collection3', None)
         country1 = form2.country1.data
         country2 = form2.country2.data
         age = form2.age.data        
@@ -246,12 +256,15 @@ def form():
         #print (collection1,collection2)
         collection =collection1+collection2
         session.pop('single', None)
+        session.pop('sum', None)
         session['double']=1
         session['collection2'] = collection
         print  (session['collection2'])
-        return redirect(url_for('form'))
+        #return redirect(url_for('form'))
    
-    if form3.validate_on_submit():    
+    if form3.validate_on_submit():  
+        session.pop('collection2', None)
+        session.pop('collection', None)  
         country1 = form3.country1.data
         country2 = form3.country2.data
         age = form3.age.data      
@@ -281,7 +294,130 @@ def form():
     return render_template('form.html', single=session.get('single'),double=session.get('double'),sum=session.get('sum'),
     form1=form1,form2=form2,form3=form3, country=session.get('country'), query1=session.get('collection'),query2=session.get('collection2'),query3=session.get('collection3'))
 
+@app.route('/single', methods=['GET', 'POST'])
+def country(): 
+    form1= countryRequest()
+
+   
+
+    if form1.validate_on_submit():
+        session.pop('collection2', None)
+        session.pop('collection3', None)
+        country = form1.country.data
+        age = form1.age.data
+        gender = form1.gender.data
+        #get country id
+        
+        r =Country.query.filter_by(countryname= country).first()
+
+        #query all data for country in populationdata table
+        r2 =populationdata.query.filter_by(countryid=r.countryid,age=age).all()
+        collection = []
+        print (r2)
+        for e in r2:
+         
+            #data2= [{'year':year,'age':age,'country':country,'gender':gender,'male':e.male,'female':e.female}]
+            if (gender=='Male'):
+                tuple = {'year': e.year,'age':age,'country':country, 'gender':e.male, 'group': 1}
+            elif (gender=='Female'):
+                tuple = {'year': e.year,'age':age,'country':country, 'gender':e.female,'group': 1}
+            #append result to collection
+            collection.append(tuple)
+        session.pop('country', None)
+        session['country'] ={'country1':country,'age':age, 'gender':gender}
+        #session['collection'] = collection
+        #print(collection)
+
+        session['single']=1
+        session['collection']=collection
+
+        print  (session['collection'])
+        return redirect(url_for('country'))
+    return render_template('single.html',form1=form1,query1=session.get('collection'),country=session.get('country'))
+
+@app.route('/compare', methods=['GET', 'POST'])
+def compareCountry():   
+     #Comparison form     
+    form2 = compareCountries()
+    if form2.validate_on_submit():
+        session.pop('collection', None)
+ 
+        session.pop('collection3', None)
+        country1 = form2.country1.data
+        country2 = form2.country2.data
+        age = form2.age.data        
+        gender = form2.gender.data
+        r_country1 =Country.query.filter_by(countryname= country1).first()
+        r_country2 =Country.query.filter_by(countryname= country2).first()
+
+        r2_country1= populationdata.query.filter_by(countryid= r_country1.countryid,age=age).all()
+        collection1 = []
+        for e in r2_country1:
+            if (gender=='Male'):
+                    tuple = {'year': e.year,'age':age,'country':country1, 'gender':e.male, 'group': 1}
+            elif (gender=='Female'):
+                tuple = {'year': e.year,'age':age,'country':country1, 'gender':e.female, 'group': 1}
+            #append result to collection
+            collection1.append(tuple)
+
+        r2_country2= populationdata.query.filter_by(countryid= r_country2.countryid,age=age).all()
+        collection2 = []
+        for e in r2_country2:
+            if (gender=='Male'):
+                    tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.male, 'group': 2}
+            elif (gender=='Female'):
+                tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.female, 'group': 2}
+            
+            collection2.append(tuple)
+        session.pop('country', None)    
+        session['country'] = {'country1':country1,'country2':country2 ,'age':age, 'gender':gender}
+       
     
+        #print (collection1,collection2)
+        collection =collection1+collection2
+        session.pop('single', None)
+        session.pop('sum', None)
+        session['double']=1
+        session['collection2'] = collection
+        print  (session['collection2'])
+        return redirect(url_for('compareCountry'))
+
+    return render_template('compare.html',form2=form2,query2=session.get('collection2'),country=session.get('country'))
+
+
+@app.route('/totals', methods=['GET', 'POST'])
+def agregateCountry():  
+    form3= agregateCountries() 
+    if form3.validate_on_submit():  
+        session.pop('collection2', None)
+        session.pop('collection', None)  
+        country1 = form3.country1.data
+        country2 = form3.country2.data
+        age = form3.age.data      
+
+        r_country1 =Country.query.filter_by(countryname= country1).first()
+        r_country2 =Country.query.filter_by(countryname= country2).first()
+
+        r2_country1= populationdata.query.filter_by(countryid= r_country1.countryid,age=age).all()
+        collection1 = []
+        for e in r2_country1:
+                tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.male+ e.female, 'group': 1}
+                collection1.append(tuple)
+        r2_country2= populationdata.query.filter_by(countryid= r_country2.countryid,age=age).all()
+        collection2 = []
+        for e in r2_country2:
+                tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.male+ e.female, 'group': 2}
+                collection2.append(tuple)        
+        collection =collection1+collection2
+        session.pop('single', None)
+        session.pop('double', None)
+        session['sum']=1
+        session['collection3'] = collection
+        session['country'] = {'country1':country1,'country2':country2 ,'age':age, 'gender':'Male & Female'}
+        print  (session['collection3'])
+        return redirect(url_for('agregateCountry'))
+
+    return render_template('totals.html',form3=form3,query3=session.get('collection3'),country=session.get('country'))
 @app.route('/graph')
 def graph():
     return render_template('graph.html')

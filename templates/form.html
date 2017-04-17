@@ -86,6 +86,7 @@
             <label for="amount">Years Range</label>
             <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
             {{country}}
+            {{single}},{{double}},{{sum}}
         
             
             
@@ -106,8 +107,9 @@
 $( "#tabs" ).tabs({active:{% if single%}0
                         {% elif double %}
                         1
-                        {% else %}
-                        0
+                         {% elif sum %}
+                         2
+
                         {% endif %}
                         }
 
