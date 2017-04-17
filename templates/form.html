@@ -86,6 +86,7 @@
             <label for="amount">Years Range</label>
             <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
             {{country}}
+        
             
             
             </p>
@@ -143,6 +144,11 @@ $( function() {
             {% for e in query2 %}
                 {x: '{{e.year}}', y: {{e.gender}}, group: {{e.group}}},
             {% endfor %}
+        {% elif sum %} 
+            {% for e in query3 %}
+                {x: '{{e.year}}', y: {{e.gender}}, group: {{e.group}}},
+            {% endfor %}   
+
         {% endif %}
   ];
 
@@ -160,6 +166,15 @@ groups.add({
     // Optional: options
   })
   {% if double %} 
+  groups.add({
+    id: 2,
+    content: '{{country.country2}} - {{country.age}} {{country.gender}}',
+    // Optional: a field 'visible'
+    // Optional: a field 'className'
+    // Optional: options
+  })
+   {% endif %}
+  {% if sum %} 
   groups.add({
     id: 2,
     content: '{{country.country2}} - {{country.age}} {{country.gender}}',

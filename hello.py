@@ -98,6 +98,9 @@ class agregateCountries(Form):
 
     country2=  SelectField('Select 2nd Country', choices=[('Guyana', 'Guyana'), 
                             ('Jamaica', 'Jamaica'), ('Trinidad and Tobago', 'Trinidad and Tobago')])   
+
+    age = SelectField('Select age (18,25,30)',   choices=[('18', 18), ('25', 25), ('30', 30)])
+
     submit = SubmitField('Submit')                            
     
     
@@ -246,11 +249,37 @@ def form():
         session['double']=1
         session['collection2'] = collection
         print  (session['collection2'])
-        #return redirect(url_for('form'))
+        return redirect(url_for('form'))
    
-        
-    return render_template('form.html', single=session.get('single'),double=session.get('double'),
-    form1=form1,form2=form2,form3=form3, country=session.get('country'), query1=session.get('collection'),query2=session.get('collection2'))
+    if form3.validate_on_submit():    
+        country1 = form3.country1.data
+        country2 = form3.country2.data
+        age = form3.age.data      
+
+        r_country1 =Country.query.filter_by(countryname= country1).first()
+        r_country2 =Country.query.filter_by(countryname= country2).first()
+
+        r2_country1= populationdata.query.filter_by(countryid= r_country1.countryid,age=age).all()
+        collection1 = []
+        for e in r2_country1:
+                tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.male+ e.female, 'group': 1}
+                collection1.append(tuple)
+        r2_country2= populationdata.query.filter_by(countryid= r_country2.countryid,age=age).all()
+        collection2 = []
+        for e in r2_country2:
+                tuple = {'year': e.year,'age':age,'country':country2, 'gender':e.male+ e.female, 'group': 2}
+                collection2.append(tuple)        
+        collection =collection1+collection2
+        session.pop('single', None)
+        session.pop('double', None)
+        session['sum']=1
+        session['collection3'] = collection
+        session['country'] = {'country1':country1,'country2':country2 ,'age':age, 'gender':'Male & Female'}
+        print  (session['collection3'])
+        #return redirect(url_for('form'))
+
+    return render_template('form.html', single=session.get('single'),double=session.get('double'),sum=session.get('sum'),
+    form1=form1,form2=form2,form3=form3, country=session.get('country'), query1=session.get('collection'),query2=session.get('collection2'),query3=session.get('collection3'))
 
     
 @app.route('/graph')
