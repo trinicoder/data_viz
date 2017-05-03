@@ -1,3 +1,3 @@
-# data_viz
-flask,api
-Flask learning app with use of http://api.population.io/
+# Data Visualization 
+Using:Flask,Postgres,visjs
+Data Source: http://api.population.io/
